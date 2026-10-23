@@ -4,11 +4,10 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-// توکن ربات سروش خودت رو دقیق بین دوتا تک‌کوتیشن بذار
 const BOT_TOKEN = '70651296:W83P518nvcU1CDVAwNCufHb9MpCBYVbQfKU';
 const BASE_URL = `https://bot.sapp.ir/v1/${BOT_TOKEN}`;
+const WEBHOOK_URL = 'https://soroush-bot-cleaner.onrender.com/webhook';
 
-// کلمات ممنوعه
 const BAD_WORDS = ['تبلیغ', 'شارژ رایگان', 'فروش اکانت', 'قمار', 'صیغه'];
 const LINK_REGEX = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(ir|com|org|net|me|xyz|io))/i;
 const ID_REGEX = /@[a-zA-Z0-9_]+/i;
@@ -41,6 +40,13 @@ app.post('/webhook', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+
+  try {
+    const res = await axios.post(`${BASE_URL}/setWebhook?url=${WEBHOOK_URL}`);
+    console.log('Webhook set successfully:', res.data);
+  } catch (err) {
+    console.error('Webhook set error:', err?.response?.data || err.message);
+  }
 });
