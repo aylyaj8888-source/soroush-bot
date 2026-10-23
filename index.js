@@ -8,8 +8,8 @@ const BOT_TOKEN = '70651296:W83P518nvcU1CDVAwNCufHb9MpCBYVbQfKU';
 const BASE_URL = `https://bot.sapp.ir/v1/${BOT_TOKEN}`;
 const WEBHOOK_URL = 'https://soroush-bot-cleaner.onrender.com/webhook';
 
-// لینک گیف دلخواهت را اینجا بگذار (باید با .gif یا پسوند مستقیم فایل تمام شود)
-const GIF_URL = 'https://uupload.ir/view/1792745965536_287t.mp4/';
+// لینک مستقیم ویدیو شما
+const VIDEO_URL = 'https://s6.uupload.ir/filelink/5pAiScgCFB2s_10b7bfa9ef/1792745965536_287t.mp4';
 
 app.post('/webhook', async (req, res) => {
   res.status(200).send('OK');
@@ -17,22 +17,21 @@ app.post('/webhook', async (req, res) => {
   try {
     const update = req.body;
     const text = update?.body || update?.caption || '';
-    const toUser = update?.from; // آیدی عددی کاربری که پیام داده
+    const toUser = update?.from;
 
-    // اگر کاربر دستور شروع یا استارت زد
+    // وقتی هر کاربری استارت زد یا پیامی داد
     if (toUser && (text === '/start' || text.toLowerCase() === 'start' || text === 'شروع')) {
-      // ارسال گیف (نوع پیام در سروش file یا image است)
       await axios.post(`${BASE_URL}/sendMessage`, {
         to: toUser,
-        body: 'سلام! خیلی خوش اومدی ❤️',
-        type: 'file',
-        fileUrl: GIF_URL
+        body: 'خوش اومدی! ❤️',
+        type: 'video',
+        fileUrl: VIDEO_URL
       });
 
-      console.log(`GIF sent to user: ${toUser}`);
+      console.log(`Video sent to user: ${toUser}`);
     }
   } catch (error) {
-    console.error('Error sending GIF:', error?.response?.data || error.message);
+    console.error('Error sending video:', error?.response?.data || error.message);
   }
 });
 
